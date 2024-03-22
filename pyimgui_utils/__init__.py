@@ -1,5 +1,7 @@
-"""
-This module provides useful utils to create ImGui elements.
+"""Utils specific to pyimgui
+
+This module provides prototype to create
+ImGui elements (windows, buttons, node trees ...).
 """
 
 from .window import (ImGuiWindowAbstract, BasicWindow,

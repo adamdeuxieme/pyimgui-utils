@@ -1,5 +1,4 @@
-import logging
-from typing import Union, Callable, Tuple, Optional
+from typing import Union, Callable, Tuple, Optional, List
 
 import imgui
 
@@ -11,7 +10,7 @@ class DragButtons:
                  drag_max: Union[float, int],
                  drag_speed: Union[float, int] = 1.0,
                  btn_width: Union[int, float] = 220,
-                 title: Union[str, None] = None):  # todo: switch to Optional in hint
+                 title: Optional[str] = None):
         """DragButton row.
 
         Facilitate build of drag buttons row creation.
@@ -27,38 +26,32 @@ class DragButtons:
         self._drag_speed = drag_speed
         self._title = None if title is not None and title == "" else title
 
-        if self._title is not None:  # todo: Remove it, shouldn't be in main
-            print(f"title: {self._title} id:{id(self)}")
-
     def draw(self,
              values: Union[list[float], list[int]],
-             callbacks: list[Callable[[Union[float, int]], None]],
-             format_table: Union[list[str], None] = None):  # todo: switch to Optional in hint
-
+             callbacks: List[Callable[[Union[float, int]], None]],
+             format_table: Optional[list[str]] = None):
         btn_nb = len(callbacks)
-
         for i in range(btn_nb):
             btn_id = f"{id(self)}{i}"  # Must be unique to ensure correct callback binding
+            imgui.push_id(btn_id)
             imgui.set_next_item_width(self._btn_width)
 
             if format_table is not None:
-                imgui.push_id(btn_id)  # todo: move the previous scope
                 changed, value = imgui.drag_float("",
                                                   values[i],
                                                   self._drag_speed,
                                                   self._drag_min,
                                                   self._drag_max,
                                                   format_table[i])
-                imgui.pop_id()
 
             else:
-                imgui.push_id(btn_id)  # todo: move the previous scope
                 changed, value = imgui.drag_float("",
                                                   values[i],
                                                   self._drag_speed,
                                                   self._drag_min,
                                                   self._drag_max)
-                imgui.pop_id()
+
+            imgui.pop_id()
 
             if changed:
                 callbacks[i](value)
@@ -73,15 +66,15 @@ class DragButtons:
 
 class Button:
 
-    def __init__(self,  # todo: Use Optional hint for attributes down here
+    def __init__(self,
                  label: str,
                  btn_callback: Callable[..., None],
                  hold_condition: Optional[Callable[..., bool]] = None,
                  hold_btn_color: Optional[Tuple[float, float, float]] = None,
                  hold_btn_color_hovered: Optional[Tuple[float, float, float]] = None,
                  hold_btn_color_active: Optional[Tuple[float, float, float]] = None,
-                 width: int = 0,
-                 height: int = 0):
+                 width: Optional[int] = 0,
+                 height: Optional[int] = 0):
         """Advance imgui button
         It embeds more features than classic imgui button. For instance, it is possible to hold the button color.
 
@@ -100,8 +93,7 @@ class Button:
         self._btn_callback = btn_callback
         self._hold_condition = hold_condition
 
-        # todo: change default color
-        self._hold_btn_color = [0.973, 0.514, 0.027] if hold_btn_color is None else hold_btn_color
+        self._hold_btn_color = [0.5, 0.5, 0.5] if hold_btn_color is None else hold_btn_color
 
         if hold_btn_color_hovered is None:
             self._hold_btn_color_hovered = self._hold_btn_color
@@ -136,7 +128,7 @@ class Button:
 class NodeTree:
 
     def __init__(self,
-                 btns: list[Union[Button]] = None,
+                 btns: List[Union[Button]] = None,
                  tree_child_offset: int = 10):
         """Node tree
         Draw a node tree with optional buttons on the left side.
@@ -156,7 +148,7 @@ class NodeTree:
 
         self._tree_child_offset = tree_child_offset
 
-    def draw(self, elements: list, get_children: Callable) -> None:
+    def draw(self, elements: List, get_children: Callable) -> None:
         """Draw the node tree with elements list.
 
         :param elements: list of elements represented a node tree
@@ -168,7 +160,7 @@ class NodeTree:
                                 btn_cur_pos=imgui.get_cursor_pos_x())
 
     def _display_node_tree(self,
-                           elements: list,
+                           elements: List,
                            get_children: Callable,
                            btn_cur_pos: float,
                            offset: float = 0) -> None:
