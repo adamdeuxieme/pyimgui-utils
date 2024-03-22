@@ -11,33 +11,38 @@ class DragButtons:
                  drag_max: Union[float, int],
                  drag_speed: Union[float, int] = 1.0,
                  btn_width: Union[int, float] = 220,
-                 title: Union[str, None] = None):
+                 title: Union[str, None] = None):  # todo: switch to Optional in hint
+        """DragButton row.
 
+        Facilitate build of drag buttons row creation.
+        :param drag_min:   drag buttons min value
+        :param drag_max:   drag buttons max value.
+        :param drag_speed: drag buttons speed
+        :param btn_width:  drag buttons width
+        :param title:      Optional drag button title
+        """
         self._btn_width = btn_width
         self._drag_min = drag_min
         self._drag_max = drag_max
         self._drag_speed = drag_speed
         self._title = None if title is not None and title == "" else title
 
-        if self._title is not None:
+        if self._title is not None:  # todo: Remove it, shouldn't be in main
             print(f"title: {self._title} id:{id(self)}")
 
     def draw(self,
              values: Union[list[float], list[int]],
              callbacks: list[Callable[[Union[float, int]], None]],
-             format_table: Union[list[str], None] = None):
+             format_table: Union[list[str], None] = None):  # todo: switch to Optional in hint
 
         btn_nb = len(callbacks)
 
         for i in range(btn_nb):
-
-            btn_id = f"{id(self)}{i}"
-
+            btn_id = f"{id(self)}{i}"  # Must be unique to ensure correct callback binding
             imgui.set_next_item_width(self._btn_width)
 
             if format_table is not None:
-
-                imgui.push_id(btn_id)
+                imgui.push_id(btn_id)  # todo: move the previous scope
                 changed, value = imgui.drag_float("",
                                                   values[i],
                                                   self._drag_speed,
@@ -47,13 +52,12 @@ class DragButtons:
                 imgui.pop_id()
 
             else:
-                imgui.push_id(btn_id)
+                imgui.push_id(btn_id)  # todo: move the previous scope
                 changed, value = imgui.drag_float("",
                                                   values[i],
                                                   self._drag_speed,
                                                   self._drag_min,
                                                   self._drag_max)
-
                 imgui.pop_id()
 
             if changed:
@@ -69,7 +73,7 @@ class DragButtons:
 
 class Button:
 
-    def __init__(self,
+    def __init__(self,  # todo: Use Optional hint for attributes down here
                  label: str,
                  btn_callback: Callable[..., None],
                  hold_condition: Optional[Callable[..., bool]] = None,
@@ -95,7 +99,9 @@ class Button:
         self._label = label
         self._btn_callback = btn_callback
         self._hold_condition = hold_condition
-        self._hold_btn_color = [0.973, 0.514, 0.027] if hold_btn_color is None else hold_btn_color  # Orange
+
+        # todo: change default color
+        self._hold_btn_color = [0.973, 0.514, 0.027] if hold_btn_color is None else hold_btn_color
 
         if hold_btn_color_hovered is None:
             self._hold_btn_color_hovered = self._hold_btn_color
@@ -110,7 +116,8 @@ class Button:
         self._width = width
         self._height = height
 
-    def draw(self, *args, **kwargs):
+    def draw(self, *args, **kwargs) -> None:
+        """Draw button."""
 
         hold_flag = self._hold_condition(*args, **kwargs) if self._hold_condition is not None else False
 
@@ -128,8 +135,15 @@ class Button:
 
 class NodeTree:
 
-    def __init__(self, btns: list[Union[Button]] = None, tree_child_offset: int = 10):
+    def __init__(self,
+                 btns: list[Union[Button]] = None,
+                 tree_child_offset: int = 10):
+        """Node tree
+        Draw a node tree with optional buttons on the left side.
 
+        :param btns: List of Buttons (from this module)
+        :param tree_child_offset: Custom offset of the tree (default 10)
+        """
         if btns is not None:
             if (not isinstance(btns, list)
                     or not all(isinstance(el, Button)

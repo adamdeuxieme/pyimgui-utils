@@ -15,7 +15,7 @@ class ImGuiWindowAbstract(ABC):
     Provide a flexible list of function to be executed around begin
     and end statement.
     """
-    _focus_state = {}
+    _focus_state = {}  # todo: remove unused attribute
     __FOCUS_ID_VALUE_ERROR_MSG = "_focus_id is not in _focus_state dict!"
 
     def __init__(self):
@@ -30,13 +30,13 @@ class ImGuiWindowAbstract(ABC):
         self._after_begin_functions = []
         self._before_end_functions = []
 
-        self._focus_id = f"focus-id-{id(self)}"  # Create a unique focus name
+        self._focus_id = f"focus-id-{id(self)}"  # Create a unique focus id
         _WINDOWS_FOCUS_STATE[self._focus_id] = False  # Not focused by default
 
         self.__log.debug(f"Initialize focus window {self._focus_id}.")
 
     @classmethod
-    def _get_windows_focus_state(cls):
+    def _get_windows_focus_state(cls) -> dict:  # todo: create a custom dataclass for window focus feature
         """Get windows focus state global variable. It stocks windows focus state.
         :return: A dict with the windows focus state.
         """
@@ -46,7 +46,6 @@ class ImGuiWindowAbstract(ABC):
     def draw(self, *args, **kwargs) -> None:
         """Draw ImGui window and execute declared function around
         begin and end statement.
-        :return None.
         """
         for func in self._before_begin_functions:
             func()
@@ -100,11 +99,14 @@ class ImGuiWindowAbstract(ABC):
 
     @abstractmethod
     def _begin_statement_window(self):
-        """ImGui's instruction to begin a window."""
+        """ImGui's instruction to begin a window.
+        Use in 'with' statement to safely open and close the imgui window.
+        e.g. imgui.begin('window_name')
+        """
         pass
 
     @abstractmethod
-    def _draw_content(self, *args, **kwargs):
+    def _draw_content(self, *args, **kwargs):  # todo: switch to unprotected method
         """Instructions to draw the main content of the window."""
         pass
 
@@ -118,10 +120,12 @@ class BasicWindow(ImGuiWindowAbstract):
                  window_name: str,
                  closeable: Union[bool, None] = False,
                  imgui_window_flags: Union[int, None] = 0):
-        """
-        :param window_name: The title of window 
-        :param closeable:
-        :param imgui_window_flags:
+        """Basic window
+         The most basic window opened with imgui.begin().
+
+        :param window_name: The title of window
+        :param closeable: True if the window is closeable, False otherwise
+        :param imgui_window_flags: Optional imgui window flags
         """
         super().__init__()
 

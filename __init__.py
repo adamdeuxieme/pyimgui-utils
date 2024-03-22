@@ -1,5 +1,5 @@
 """
-This module provides useful helper class to create ImGui element, both windows and elements as buttons.
+This module provides useful utils to create ImGui elements.
 """
 
 from .window import (ImGuiWindowAbstract, BasicWindow,
