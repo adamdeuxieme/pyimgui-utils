@@ -1,9 +1,7 @@
+import logging
 from typing import Union, Callable, Tuple, Optional
 
-import core.log as lg
 import imgui
-
-LOGGING = lg.get_logger(__name__)
 
 
 class DragButtons:
