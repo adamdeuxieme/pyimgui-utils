@@ -128,8 +128,8 @@ class Button:
 class NodeTree:
 
     def __init__(self,
-                 btns: List[Union[Button]] = None,
-                 tree_child_offset: int = 10):
+                 btns: List[Union[Button]] = None,  # todo: do not force use of Button component
+                 tree_child_offset: int = 10):  # todo: Make this argument optional
         """Node tree
         Draw a node tree with optional buttons on the left side.
 
@@ -146,7 +146,7 @@ class NodeTree:
         else:
             self._btns = None
 
-        self._tree_child_offset = tree_child_offset
+        self._tree_child_offset = tree_child_offset  # todo: assert tree_child_offset is int
 
     def draw(self, elements: List, get_children: Callable) -> None:
         """Draw the node tree with elements list.
@@ -198,7 +198,7 @@ class NodeTree:
             tree_input_cursor_position = imgui.get_cursor_pos_x() + offset
             imgui.set_cursor_pos_x(tree_input_cursor_position)  # Put the cursor back it tree level position
 
-            imgui.push_id(id(el))
+            imgui.push_id(id(el))   # todo: do not force presence of name attribute
             if imgui.tree_node(el.name):
                 imgui.pop_id()
                 display_tree_offset = self._tree_child_offset
