@@ -1,4 +1,7 @@
+from typing import Any
+
 import glfw
+from glfw.GLFW import glfwTerminate
 from OpenGL.GL import GL_TRUE
 import imgui
 from imgui.integrations.glfw import GlfwRenderer
@@ -6,14 +9,14 @@ from imgui.integrations.glfw import GlfwRenderer
 from pyimgui_utils import ImGuiWindowAbstract
 
 
-def setup_imgui_context() -> GlfwRenderer:
+def setup_imgui_context() -> [GlfwRenderer, Any, Any]:
     """Setup imgui context
 
-    Strongly inspired form the tests from pyimgui repo.
+    Strongly inspired form the tests in pyimgui repo.
     Repo link: https://github.com/pyimgui/pyimgui/
     """
 
-    width, height = 300, 300
+    width, height = 600, 300
     window_name = "TestImGuiWindowAbstract"
 
     if not glfw.init():
@@ -29,14 +32,23 @@ def setup_imgui_context() -> GlfwRenderer:
 
     # Create a windowed mode window and its OpenGL context
     window = glfw.create_window(
-        int(width), int(height), window_name, None, None
+        width, height, window_name, None, None
     )
-    glfw.make_context_current(window)
 
     if not window:
         glfw.terminate()
         print("Could not initialize Window")
         exit(1)
 
-    imgui.create_context()
-    return GlfwRenderer(window)
+    glfw.make_context_current(window)
+
+    ctx = imgui.create_context()
+    impl = GlfwRenderer(window)
+    impl.io.ini_file_name = None
+    return impl, window, ctx
+
+
+def terminate_imgui_context(impl, ctx) -> None:
+    impl.shutdown()
+    glfwTerminate()
+    imgui.destroy_context(ctx)

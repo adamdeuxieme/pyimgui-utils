@@ -5,7 +5,7 @@ import imgui
 import pytest
 
 from pyimgui_utils import Button, DragButtons, NodeTree
-from tests.utils import setup_imgui_context
+from tests.utils import setup_imgui_context, terminate_imgui_context
 
 
 class TestButton:
@@ -58,7 +58,7 @@ class TestButton:
         assert btn_holdable_active._hold_btn_color_active == hold_btn_active
 
     def test_draw(self):
-        setup_imgui_context()
+        impl, _, ctx = setup_imgui_context()
 
         msg = []
         hold_btn_color = (.0, .5, .5)
@@ -76,6 +76,7 @@ class TestButton:
         imgui.new_frame()
         btn_holdable_active.draw()
         imgui.render()
+        terminate_imgui_context(impl, ctx)
 
 
 class TestDragButton:
@@ -122,7 +123,7 @@ class TestDragButton:
         assert drag_button_with_title._title == title
 
     def test_draw(self):
-        setup_imgui_context()
+        impl, _, ctx = setup_imgui_context()
         drag_min = .0
         drag_max = 1.
         drag_speed = .001
@@ -139,6 +140,7 @@ class TestDragButton:
                          callbacks=[lambda e: None for _ in range(3)],
                          format_table=["x:%0.3f", "y:%0.3f", "z:%0.3f"])
         imgui.render()
+        terminate_imgui_context(impl, ctx)
 
 
 class TestNodeTree:
@@ -167,7 +169,7 @@ class TestNodeTree:
             )
 
     def test_draw(self):
-        setup_imgui_context()
+        impl, _, ctx = setup_imgui_context()
 
         btns = [Button(label="D",
                        btn_callback=lambda: None)]
@@ -192,3 +194,4 @@ class TestNodeTree:
         imgui.new_frame()
         node_tree.draw(elements, lambda e: e.children)
         imgui.render()
+        terminate_imgui_context(impl, ctx)

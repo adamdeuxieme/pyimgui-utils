@@ -32,7 +32,7 @@ class TestImGuiWindowAbstract():
             ImGuiWindowAbstract()
 
     def test_before_after_begin_end_methods(self):
-        _ = setup_imgui_context()
+        setup_imgui_context()
 
         class ClassUnderTest(Window):
             def __init__(self):
