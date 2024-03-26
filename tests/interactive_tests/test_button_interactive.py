@@ -36,7 +36,7 @@ class TestDragButtonWindow(BasicWindow):
         self.drag_btns = DragButtons(
             drag_min=-5.,
             drag_max=5.,
-            drag_speed=0.1,
+            drag_speed=0.05,
             btn_width=50.,
             title="title"
         )
@@ -73,5 +73,5 @@ class TestButtonInteractive:
                                "corresponding value should change. format table ",
                                "must be like this 'x:0.0'. Min value must be ",
                                "-5.0 and max value must be 5.0. Drag speed must ",
-                               "be 0.01 and width 30."]
+                               "be 0.05 and width 50.0"]
         )

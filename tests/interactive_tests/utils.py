@@ -31,13 +31,15 @@ class TestWindow(BasicWindow):
         :param window_name: Name of the window to display.
         """
         super().__init__(window_name)
-        self.test_passes = False
+        self.test_passes = None
         self.expected_behavior = expected_behavior
         self.test_passes_btn = Button(
             label="Test passes",
-            btn_callback=self.validate_factory(),
-            hold_condition=lambda _: self.test_passes,
-            hold_btn_color=(.0, 1.0, 0.)
+            btn_callback=self.pass_factory(),
+        )
+        self.test_fails_btn = Button(
+            label="Test fails",
+            btn_callback=self.fail_test,
         )
 
     @override
@@ -52,19 +54,32 @@ class TestWindow(BasicWindow):
         else:
             raise TypeError("expected_behavior must be a list or str!")
 
+        imgui.push_style_color(imgui.COLOR_BUTTON, 0., 1., 0., 1.)
+        imgui.push_style_color(imgui.COLOR_BUTTON_HOVERED, 0., 1., 0., 1.)
+        imgui.push_style_color(imgui.COLOR_BUTTON_ACTIVE, 0., 1., 0., 1.)
+        imgui.push_style_color(imgui.COLOR_TEXT, 0., 0., 0., 1.)
+        self.test_passes_btn.draw(*args, **kwargs)
+        imgui.pop_style_color(4)
+
+        imgui.same_line()
+
         imgui.push_style_color(imgui.COLOR_BUTTON, 1., 0., 0., 1.)
         imgui.push_style_color(imgui.COLOR_BUTTON_HOVERED, 1., 0., 0., 1.)
         imgui.push_style_color(imgui.COLOR_BUTTON_ACTIVE, 1., 0., 0., 1.)
-        self.test_passes_btn.draw(*args, **kwargs)
+        self.test_fails_btn.draw(*args, **kwargs)
         imgui.pop_style_color(3)
 
-    def validate_factory(self):
+    def pass_factory(self):
         """Mark the test as passed and close the window"""
-        def validate(window):
+        def pass_test(window):
             self.test_passes = True
             glfw.set_window_should_close(window, True)
 
-        return validate
+        return pass_test
+
+    @staticmethod
+    def fail_test(window):
+        glfw.set_window_should_close(window, True)
 
 
 def run_test_window(window_under_test: ImGuiWindowAbstract,
@@ -87,18 +102,22 @@ def run_test_window(window_under_test: ImGuiWindowAbstract,
         impl.render(imgui.get_draw_data())
         glfwSwapBuffers(window)
 
-    # Display the green button for 100ms (better feedback)
-    imgui.new_frame()
-    tw.draw(window)
-    glClear(GL_COLOR_BUFFER_BIT)
-    imgui.render()
-    impl.render(imgui.get_draw_data())
-    glfwSwapBuffers(window)
-    time.sleep(0.1)
-
     terminate_imgui_context(impl, ctx)
+    if tw.test_passes is None:
+        raise InteractiveTestException("The interactive test appears to have "
+                                       "terminated without specifying whether "
+                                       "it passes or fails. \n"
+                                       "It mays happen if the operator close "
+                                       "the main window without clicking on "
+                                       "'Test passes' or on 'Test fails' "
+                                       "buttons.")
 
     assert tw.test_passes, ("Expected behavior unmatch. "
                             "Expected behavior: "
                             + "".join(tw.expected_behavior)
                             .__repr__())
+
+
+class InteractiveTestException(Exception):
+    def __init__(self, message):
+        super().__init__(message)
