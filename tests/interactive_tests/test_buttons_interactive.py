@@ -3,6 +3,7 @@ from typing_extensions import override
 
 from pyimgui_utils import BasicWindow, Button, DragButtons
 from tests.interactive_tests.utils import run_test_window
+from tests.test_config import INTERACTIVE_ENABLED
 
 
 class TestButtonWindow(BasicWindow):
@@ -55,23 +56,25 @@ class TestDragButtonWindow(BasicWindow):
         )
 
 
-class TestButtonInteractive:
+class TestButtonsInteractive:
 
     def test_button(self):
-        wd_ut = TestButtonWindow()
-        run_test_window(
-            window_under_test=wd_ut,
-            expected_behavior=["You should see a button. On press ",
-                               "the number of clicked count should increases."]
-        )
+        if INTERACTIVE_ENABLED:
+            wd_ut = TestButtonWindow()
+            run_test_window(
+                window_under_test=wd_ut,
+                expected_behavior=["You should see a button. On press ",
+                                   "the number of clicked count should increases."]
+            )
 
     def test_drag_buttons(self):
-        wd_ut = TestDragButtonWindow()
-        run_test_window(
-            window_under_test=wd_ut,
-            expected_behavior=["You should see drag buttons. On dragging the ",
-                               "corresponding value should change. format table ",
-                               "must be like this 'x:0.0'. Min value must be ",
-                               "-5.0 and max value must be 5.0. Drag speed must ",
-                               "be 0.05 and width 50.0"]
-        )
+        if INTERACTIVE_ENABLED:
+            wd_ut = TestDragButtonWindow()
+            run_test_window(
+                window_under_test=wd_ut,
+                expected_behavior=["You should see drag buttons. On dragging the ",
+                                   "corresponding value should change. format table ",
+                                   "must be like this 'x:0.0'. Min value must be ",
+                                   "-5.0 and max value must be 5.0. Drag speed must ",
+                                   "be 0.05 and width 50.0"]
+            )

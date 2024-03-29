@@ -1,5 +1,6 @@
 from pyimgui_utils import BasicWindow, NodeTree, Button
 from tests.interactive_tests.utils import run_test_window
+from tests.test_config import INTERACTIVE_ENABLED
 
 
 class Node:
@@ -42,11 +43,12 @@ class TestNodeTreeWindow(BasicWindow):
 class TestNodeTreeInteractive:
 
     def test_node_tree_with_button(self):
-        wd_ut = TestNodeTreeWindow()
-        run_test_window(
-            window_under_test=wd_ut,
-            expected_behavior=["You should see a node tree with 3 nodes.",
-                               "A button SC should switch node case on click.",
-                               "Every button should be align on the left.",
-                               "Node tree offset should be visible."]
-        )
+        if INTERACTIVE_ENABLED:
+            wd_ut = TestNodeTreeWindow()
+            run_test_window(
+                window_under_test=wd_ut,
+                expected_behavior=["You should see a node tree with 3 nodes.",
+                                   "A button SC should switch node case on click.",
+                                   "Every button should be align on the left.",
+                                   "Node tree offset should be visible."]
+            )

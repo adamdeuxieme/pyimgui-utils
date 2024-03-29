@@ -198,9 +198,9 @@ class NodeTree:
             tree_input_cursor_position = imgui.get_cursor_pos_x() + offset
             imgui.set_cursor_pos_x(tree_input_cursor_position)  # Put the cursor back it tree level position
 
-            imgui.push_id(id(el))   # todo: do not force presence of name attribute
+            imgui.push_id(f"{id(el)}")   # todo: do not force presence of name attribute
             if imgui.tree_node(el.name):
-                imgui.pop_id()
                 display_tree_offset = self._tree_child_offset
                 self._display_node_tree(get_children(el), get_children, btn_cur_pos, offset + display_tree_offset)
                 imgui.tree_pop()
+            imgui.pop_id()
