@@ -207,3 +207,61 @@ class MenuBarWindow(ImGuiWindowAbstract):
 
                     if clicked:
                         menu_item.action()
+
+
+@dataclass
+class WindowStackOrientation:
+    VERTICAL = 0
+    HORIZONTAL = 1
+
+
+class WindowStack:
+    """Window stack class
+
+    This class allow users to stack multiple window vertically or horizontally.
+    """
+
+    def __init__(self,
+                 wnds: List,
+                 orientation: WindowStackOrientation,
+                 offset: float):
+        """
+        :param wnds: List of window, subclasses of ImGuiWindowAbstract.
+        :param orientation: Orientation of stacked windows.
+        :param offset: Fixed spaces between windows.
+        """
+        self._last_wnd_pos = (0.0, 0.0)
+        self._last_wnd_size = (0.0, 0.0)
+        self.wnds = wnds
+        for wnd in self.wnds:
+            wnd.before_end_functions.append(
+                lambda: self.update_last_wnd_pos()
+            )
+            wnd.before_end_functions.append(
+                lambda: self.update_last_wnd_size()
+            )
+        self.orientation = orientation
+        self.offset = offset
+
+    def update_last_wnd_pos(self) -> None:
+        """Update _last_wnd_pos."""
+        self._last_wnd_pos = imgui.get_window_position()
+
+    def update_last_wnd_size(self) -> None:
+        """Update _last_wnd_size."""
+        self._last_wnd_size = imgui.get_window_size()
+
+    def draw(self) -> None:
+        for index, wnd in enumerate(self.wnds):
+            wnd.draw()
+            if index + 1 < len(self.wnds):
+                if self.orientation == WindowStackOrientation.VERTICAL:
+                    imgui.set_next_window_position(
+                        self._last_wnd_pos[0],
+                        self._last_wnd_pos[1] + self._last_wnd_size[1] + self.offset
+                    )
+                else:
+                    imgui.set_next_window_position(
+                        self._last_wnd_pos[0] + self._last_wnd_size[0] + self.offset,
+                        self._last_wnd_pos[1]
+                    )
