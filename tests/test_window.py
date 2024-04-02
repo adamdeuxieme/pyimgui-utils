@@ -38,16 +38,16 @@ class TestImGuiWindowAbstract():
             def __init__(self):
                 super().__init__()
                 self.call_order = []
-                self._before_begin_functions.append(
+                self.before_begin_functions.append(
                     lambda: self.call_order.append(1)
                 )
-                self._after_begin_functions.append(
+                self.after_begin_functions.append(
                     lambda: self.call_order.append(2)
                 )
-                self._before_end_functions.append(
+                self.before_end_functions.append(
                     lambda: self.call_order.append(3)
                 )
-                self._after_end_functions.append(
+                self.after_end_functions.append(
                     lambda: self.call_order.append(4)
                 )
 

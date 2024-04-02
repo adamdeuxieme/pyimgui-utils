@@ -1,7 +1,7 @@
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Union, Callable
+from typing import Union, Callable, List
 
 import imgui
 from typing_extensions import override
@@ -27,10 +27,10 @@ class ImGuiWindowAbstract(ABC):
         if self.__class__ is ImGuiWindowAbstract:
             raise TypeError("Can not instantiate an ImGuiWindowAbstract Class!")
 
-        self._before_begin_functions = []
-        self._after_end_functions = []
-        self._after_begin_functions = []
-        self._before_end_functions = []
+        self.before_begin_functions = []
+        self.after_end_functions = []
+        self.after_begin_functions = []
+        self.before_end_functions = []
 
         self.focus_id = f"focus-id-{id(self)}"  # Create a unique focus id
         ImGuiWindowAbstract._init_window_focus_state(self)
@@ -45,20 +45,20 @@ class ImGuiWindowAbstract(ABC):
         """Draw ImGui window and execute declared function around
         begin and end statement.
         """
-        for func in self._before_begin_functions:
+        for func in self.before_begin_functions:
             func()
 
         with self._begin_statement_window():
 
-            for func in self._after_begin_functions:
+            for func in self.after_begin_functions:
                 func()
 
             self.draw_content(*args, **kwargs)
 
-            for func in self._before_end_functions:
+            for func in self.before_end_functions:
                 func()
 
-        for func in self._after_end_functions:
+        for func in self.after_end_functions:
             func()
 
     def focus(self):
