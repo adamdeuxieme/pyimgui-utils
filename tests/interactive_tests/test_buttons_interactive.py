@@ -23,6 +23,40 @@ class TestButtonWindow(BasicWindow):
         imgui.text(f"{self.counter = }")
 
 
+class TestButtonSameNameWindow(BasicWindow):
+
+    def __init__(self):
+        super().__init__(
+            window_name="Test button same name window"
+        )
+        self.counter_1 = 0
+        self.counter_2 = 0
+
+        self.btn_1 = Button(
+            label="Increment",
+            btn_callback=lambda: self.increase_counter_1()
+        )
+
+        self.btn_2 = Button(
+            label="Increment",
+            btn_callback=lambda: self.increase_counter_2()
+        )
+
+    def increase_counter_1(self):
+        self.counter_1 += 1
+
+    def increase_counter_2(self):
+        self.counter_2 += 1
+
+    @override
+    def draw_content(self, *args, **kwargs) -> None:
+        imgui.text(f"{self.counter_1 = }")
+        imgui.text(f"{self.counter_2 = }")
+        self.btn_1.draw()
+        imgui.same_line()
+        self.btn_2.draw()
+
+
 class TestDragButtonWindow(BasicWindow):
 
     def __init__(self):
@@ -45,6 +79,7 @@ class TestDragButtonWindow(BasicWindow):
     def set_value_factory(self, index: int):
         def set_value(value):
             self.values[index] = value
+
         return set_value
 
     @override
@@ -65,6 +100,19 @@ class TestButtonsInteractive:
                 window_under_test=wd_ut,
                 expected_behavior=["You should see a button. On press ",
                                    "the number of clicked count should increases."]
+            )
+
+    def test_button_same_name(self):
+        if INTERACTIVE_ENABLED:
+            wd_ut = TestButtonSameNameWindow()
+            run_test_window(
+                window_under_test=wd_ut,
+                expected_behavior=["Two buttons are in the same window with "
+                                   "the same name.",
+                                   "Button on the left should increase "
+                                   "counter 1",
+                                   "Button on the right should increase "
+                                   "counter 2"]
             )
 
     def test_drag_buttons(self):

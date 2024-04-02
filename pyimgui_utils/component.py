@@ -118,8 +118,10 @@ class Button:
             imgui.push_style_color(imgui.COLOR_BUTTON_HOVERED, *self._hold_btn_color_hovered, 1.0)
             imgui.push_style_color(imgui.COLOR_BUTTON_ACTIVE, *self._hold_btn_color_active, 1.0)
 
+        imgui.push_id(f"{id(self)}")
         if imgui.button(self._label, self._width, self._height):
             self._btn_callback(*args, **kwargs)
+        imgui.pop_id()
 
         if hold_flag:
             imgui.pop_style_color(3)  # both neutral, hovered and active button color styles.
