@@ -1,4 +1,4 @@
-from typing import Union, Callable, Tuple, Optional, List
+from typing import Union, Callable, Tuple, Optional, List, Any
 
 import imgui
 
@@ -133,7 +133,7 @@ class NodeTree(DrawableIT):
 
     def __init__(self,
                  btns: List[Union[Button]] = None,  # todo: do not force use of Button component
-                 tree_child_offset: int = 10):  # todo: Make this argument optional
+                 tree_child_offset: Optional[int] = 10):
         """Node tree
         Draw a node tree with optional buttons on the left side.
 
@@ -150,28 +150,38 @@ class NodeTree(DrawableIT):
         else:
             self._btns = None
 
-        self._tree_child_offset = tree_child_offset  # todo: assert tree_child_offset is int
+        if not isinstance(tree_child_offset, int):
+            raise TypeError("tree_child_offset must be an int!")
 
-    def draw(self, elements: List, get_children: Callable) -> None:
+        self._tree_child_offset = tree_child_offset
+
+    def draw(self,
+             elements: List,
+             get_children: Callable[[Any], Any],
+             get_name: Callable[[Any], str]) -> None:
         """Draw the node tree with elements list.
 
         :param elements: list of elements represented a node tree
-        :param get_children: function to access elements' children.
+        :param get_children: Function to call on elements to get their children
+        :param get_name: Function to call on elements to get their displayed name
         """
 
         self._display_node_tree(elements=elements,
                                 get_children=get_children,
+                                get_name=get_name,
                                 btn_cur_pos=imgui.get_cursor_pos_x())
 
     def _display_node_tree(self,
                            elements: List,
-                           get_children: Callable,
+                           get_children: Callable[[Any], Any],
+                           get_name: Callable[[Any], str],
                            btn_cur_pos: float,
                            offset: float = 0) -> None:
         """This is a recursive method that display the tree node.
 
         :param elements: list of elements to display
         :param get_children: Function to call on elements to get their children
+        :param get_name: Function to call on elements to get their displayed name
         :param btn_cur_pos: The button position.
         :param offset: Offset of tree levels.
         """
@@ -202,9 +212,14 @@ class NodeTree(DrawableIT):
             tree_input_cursor_position = imgui.get_cursor_pos_x() + offset
             imgui.set_cursor_pos_x(tree_input_cursor_position)  # Put the cursor back it tree level position
 
-            imgui.push_id(f"{id(el)}")   # todo: do not force presence of name attribute
-            if imgui.tree_node(el.name):
+            imgui.push_id(f"{id(el)}")
+            if imgui.tree_node(get_name(el)):
                 display_tree_offset = self._tree_child_offset
-                self._display_node_tree(get_children(el), get_children, btn_cur_pos, offset + display_tree_offset)
+                self._display_node_tree(
+                    elements=get_children(el),
+                    get_children=get_children,
+                    get_name=get_name,
+                    btn_cur_pos=btn_cur_pos,
+                    offset=offset + display_tree_offset)
                 imgui.tree_pop()
             imgui.pop_id()

@@ -37,6 +37,7 @@ class TestNodeTreeWindow(BasicWindow):
         self.node_tree_component.draw(
             elements=[self.node_root],
             get_children=lambda node: node.children,
+            get_name=lambda node: node.name
         )
 
 

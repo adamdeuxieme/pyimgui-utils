@@ -197,7 +197,9 @@ class TestNodeTree:
 
         try:
             imgui.new_frame()
-            node_tree.draw(elements, lambda e: e.children)
+            node_tree.draw(elements=elements,
+                           get_children=lambda e: e.children,
+                           get_name=lambda e: e.name)
             imgui.render()
         finally:
             terminate_imgui_context(impl, ctx)
