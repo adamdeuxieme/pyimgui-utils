@@ -54,10 +54,12 @@ class TestImGuiWindowAbstract():
                 )
 
         cls_ut = ClassUnderTest()
-        imgui.new_frame()
-        cls_ut.draw()
-        imgui.render()
-        terminate_imgui_context(impl, ctx)
+        try:
+            imgui.new_frame()
+            cls_ut.draw()
+            imgui.render()
+        finally:
+            terminate_imgui_context(impl, ctx)
 
         assert cls_ut.call_order == [1, 2, 3, 4], \
             "Function call order not respected"
@@ -89,11 +91,13 @@ class TestWindowStack:
             offset=self.offset
         )
 
-        imgui.new_frame()
-        horizontal_stack.draw()
-        vertical_stack.draw()
-        imgui.render()
-        terminate_imgui_context(impl, ctx)
+        try:
+            imgui.new_frame()
+            horizontal_stack.draw()
+            vertical_stack.draw()
+            imgui.render()
+        finally:
+            terminate_imgui_context(impl, ctx)
 
         expected_offset_sum = 12 * 3
         expected_wnd_width_sum = (self.small_wnd_size[0] * self.small_wnd_nb

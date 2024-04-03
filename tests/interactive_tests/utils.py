@@ -72,6 +72,7 @@ class TestWindow(BasicWindow):
 
     def pass_factory(self):
         """Mark the test as passed and close the window"""
+
         def pass_test(window):
             self.test_passes = True
             glfw.set_window_should_close(window, True)
@@ -90,20 +91,22 @@ def run_test_window(window_under_test: DrawableIT,
     )
     impl, window, ctx = setup_imgui_context()
 
-    while not glfw.window_should_close(window):
-        glfwPollEvents()
-        impl.process_inputs()
-        imgui.new_frame()
+    try:
+        while not glfw.window_should_close(window):
+            glfwPollEvents()
+            impl.process_inputs()
+            imgui.new_frame()
 
-        window_under_test.draw()
-        tw.draw(window)
+            window_under_test.draw()
+            tw.draw(window)
 
-        glClear(GL_COLOR_BUFFER_BIT)
-        imgui.render()
-        impl.render(imgui.get_draw_data())
-        glfwSwapBuffers(window)
+            glClear(GL_COLOR_BUFFER_BIT)
+            imgui.render()
+            impl.render(imgui.get_draw_data())
+            glfwSwapBuffers(window)
+    finally:
+        terminate_imgui_context(impl, ctx)
 
-    terminate_imgui_context(impl, ctx)
     if tw.test_passes is None:
         raise InteractiveTestException("The interactive test appears to have "
                                        "terminated without specifying whether "

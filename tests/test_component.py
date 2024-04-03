@@ -73,10 +73,12 @@ class TestButton:
                    hold_btn_color_hovered=hold_btn_hovered,
                    hold_btn_color_active=hold_btn_active))
 
-        imgui.new_frame()
-        btn_holdable_active.draw()
-        imgui.render()
-        terminate_imgui_context(impl, ctx)
+        try:
+            imgui.new_frame()
+            btn_holdable_active.draw()
+            imgui.render()
+        finally:
+            terminate_imgui_context(impl, ctx)
 
 
 class TestDragButton:
@@ -135,12 +137,14 @@ class TestDragButton:
             btn_width=btn_width
         )
 
-        imgui.new_frame()
-        drag_button.draw(values=[1, 2, 3],
-                         callbacks=[lambda e: None for _ in range(3)],
-                         format_table=["x:%0.3f", "y:%0.3f", "z:%0.3f"])
-        imgui.render()
-        terminate_imgui_context(impl, ctx)
+        try:
+            imgui.new_frame()
+            drag_button.draw(values=[1, 2, 3],
+                             callbacks=[lambda e: None for _ in range(3)],
+                             format_table=["x:%0.3f", "y:%0.3f", "z:%0.3f"])
+            imgui.render()
+        finally:
+            terminate_imgui_context(impl, ctx)
 
 
 class TestNodeTree:
@@ -191,7 +195,9 @@ class TestNodeTree:
         el1.children.append(el11)
         elements = [el1, el2]
 
-        imgui.new_frame()
-        node_tree.draw(elements, lambda e: e.children)
-        imgui.render()
-        terminate_imgui_context(impl, ctx)
+        try:
+            imgui.new_frame()
+            node_tree.draw(elements, lambda e: e.children)
+            imgui.render()
+        finally:
+            terminate_imgui_context(impl, ctx)
