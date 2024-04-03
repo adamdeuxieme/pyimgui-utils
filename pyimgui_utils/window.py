@@ -244,6 +244,7 @@ class WindowStack(DrawableIT):
             )
         self.orientation = orientation
         self.offset = offset
+        self.size = (0.0, 0.0)
 
     def update_last_wnd_pos(self) -> None:
         """Update _last_wnd_pos."""
@@ -254,9 +255,11 @@ class WindowStack(DrawableIT):
         self._last_wnd_size = imgui.get_window_size()
 
     def draw(self) -> None:
+        wnd_size = [0.0, 0.0]
         for index, wnd in enumerate(self.wnds):
             wnd.draw()
             if index + 1 < len(self.wnds):
+                self.update_main_window_size(wnd_size)
                 if self.orientation == WindowStackOrientation.VERTICAL:
                     imgui.set_next_window_position(
                         self._last_wnd_pos[0],
@@ -267,3 +270,17 @@ class WindowStack(DrawableIT):
                         self._last_wnd_pos[0] + self._last_wnd_size[0] + self.offset,
                         self._last_wnd_pos[1]
                     )
+            else:
+                self.update_main_window_size(wnd_size, last_flag=True)
+
+        self.size = (wnd_size[0], wnd_size[1])
+
+    def update_main_window_size(self, wnd_size, last_flag: bool = False):
+        if self.orientation == WindowStackOrientation.VERTICAL:
+            wnd_size[0] = max([wnd_size[0], self._last_wnd_size[0]])
+            wnd_size[1] += self._last_wnd_size[1]
+            wnd_size[1] += 0 if last_flag else self.offset
+        else:
+            wnd_size[1] = max([wnd_size[1], self._last_wnd_size[1]])
+            wnd_size[0] += self._last_wnd_size[0]
+            wnd_size[0] += 0 if last_flag else self.offset
