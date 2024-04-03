@@ -2,8 +2,10 @@ from typing import Union, Callable, Tuple, Optional, List
 
 import imgui
 
+from pyimgui_utils.interface import DrawableIT
 
-class DragButtons:
+
+class DragButtons(DrawableIT):
 
     def __init__(self,
                  drag_min: Union[float, int],
@@ -64,7 +66,7 @@ class DragButtons:
                 imgui.same_line()
 
 
-class Button:
+class Button(DrawableIT):
 
     def __init__(self,
                  label: str,
@@ -127,7 +129,7 @@ class Button:
             imgui.pop_style_color(3)  # both neutral, hovered and active button color styles.
 
 
-class NodeTree:
+class NodeTree(DrawableIT):
 
     def __init__(self,
                  btns: List[Union[Button]] = None,  # todo: do not force use of Button component

@@ -7,7 +7,8 @@ from OpenGL.raw.GL.VERSION.GL_1_0 import glClear, GL_COLOR_BUFFER_BIT
 from glfw.GLFW import (glfwPollEvents, glfwSwapBuffers)
 from typing_extensions import override, Optional
 
-from pyimgui_utils import BasicWindow, Button, ImGuiWindowAbstract
+from pyimgui_utils import BasicWindow, Button
+from pyimgui_utils.interface import DrawableIT
 from tests.utils import setup_imgui_context, terminate_imgui_context
 
 
@@ -82,7 +83,7 @@ class TestWindow(BasicWindow):
         glfw.set_window_should_close(window, True)
 
 
-def run_test_window(window_under_test: ImGuiWindowAbstract,
+def run_test_window(window_under_test: DrawableIT,
                     expected_behavior: Union[List[str], str]):
     tw = TestWindow(
         expected_behavior=expected_behavior

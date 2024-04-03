@@ -6,8 +6,10 @@ from typing import Union, Callable, List
 import imgui
 from typing_extensions import override
 
+from pyimgui_utils.interface import DrawableIT
 
-class ImGuiWindowAbstract(ABC):
+
+class ImGuiWindowAbstract(DrawableIT):
     """Abstract for window creation.
 
     Provide a flexible list of function to be executed around begin
@@ -215,7 +217,7 @@ class WindowStackOrientation:
     HORIZONTAL = 1
 
 
-class WindowStack:
+class WindowStack(DrawableIT):
     """Window stack class
 
     This class allow users to stack multiple window vertically or horizontally.
