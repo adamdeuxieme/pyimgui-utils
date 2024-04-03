@@ -6,7 +6,7 @@ from OpenGL.GL import GL_TRUE
 import imgui
 from imgui.integrations.glfw import GlfwRenderer
 
-from pyimgui_utils import ImGuiWindowAbstract
+from pyimgui_utils import BasicWindow
 
 
 def setup_imgui_context() -> [GlfwRenderer, Any, Any]:
@@ -52,3 +52,30 @@ def terminate_imgui_context(impl, ctx) -> None:
     impl.shutdown()
     glfwTerminate()
     imgui.destroy_context(ctx)
+
+
+class DummyWindow(BasicWindow):
+
+    def __init__(self):
+        super().__init__(
+            window_name=f"{id(self)}"
+        )
+
+    def draw_content(self, *args, **kwargs) -> None:
+        imgui.text("Dummy window")
+
+
+class FixedSizeWindow(BasicWindow):
+
+    def __init__(self, x: float, y: float):
+        super().__init__(
+            window_name=f"Fixed size window-{id(self)}",
+            imgui_window_flags=imgui.WINDOW_NO_RESIZE
+        )
+        self.before_begin_functions.append(
+            lambda: imgui.set_next_window_size(x, y)
+        )
+        self.size = (x, y)
+
+    def draw_content(self, *args, **kwargs) -> None:
+        imgui.text("Fixed size window.")
