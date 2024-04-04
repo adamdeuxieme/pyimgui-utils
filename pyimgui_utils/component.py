@@ -30,11 +30,11 @@ class DragButtons(DrawableIT):
 
     def draw(self,
              values: Union[list[float], list[int]],
-             callbacks: List[Callable[[Union[float, int]], None]],
+             setters: List[Callable[[Union[float, int]], None]],
              format_table: Optional[list[str]] = None):
-        btn_nb = len(callbacks)
+        btn_nb = len(setters)
         for i in range(btn_nb):
-            btn_id = f"{id(self)}{i}"  # Must be unique to ensure correct callback binding
+            btn_id = f"{id(self)}{i}{id(values)}{id(setters)}{id(format_table)}"
             imgui.push_id(btn_id)
             imgui.set_next_item_width(self._btn_width)
 
@@ -56,7 +56,7 @@ class DragButtons(DrawableIT):
             imgui.pop_id()
 
             if changed:
-                callbacks[i](value)
+                setters[i](value)
 
             if i + 1 >= btn_nb and self._title is not None:
                 imgui.same_line()

@@ -140,7 +140,7 @@ class TestDragButton:
         try:
             imgui.new_frame()
             drag_button.draw(values=[1, 2, 3],
-                             callbacks=[lambda e: None for _ in range(3)],
+                             setters=[lambda e: None for _ in range(3)],
                              format_table=["x:%0.3f", "y:%0.3f", "z:%0.3f"])
             imgui.render()
         finally:

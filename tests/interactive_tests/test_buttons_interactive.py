@@ -67,7 +67,7 @@ class TestDragButtonWindow(BasicWindow):
                              "z:%0.1f",
                              "a:%0.1f",
                              "b:%0.1f"]
-        self.callbacks = [self.set_value_factory(i) for i in range(5)]
+        self.setters = [self.set_value_factory(i) for i in range(5)]
         self.drag_btns = DragButtons(
             drag_min=-5.,
             drag_max=5.,
@@ -86,7 +86,7 @@ class TestDragButtonWindow(BasicWindow):
     def draw_content(self, *args, **kwargs) -> None:
         self.drag_btns.draw(
             values=self.values,
-            callbacks=self.callbacks,
+            setters=self.setters,
             format_table=self.format_table
         )
 
