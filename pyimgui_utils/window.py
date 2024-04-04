@@ -188,7 +188,7 @@ class MenuBarWindow(ImGuiWindowAbstract):
         For each element, display a menu_item.
         """
         for menu_bar in self._menu_bars:
-            with imgui.begin_menu(menu_bar.name, menu_bar.enabled):
+            if imgui.begin_menu(menu_bar.name, menu_bar.enabled):
                 for menu_item in menu_bar.menu_items:
 
                     if isinstance(menu_item.name, str):
@@ -209,6 +209,8 @@ class MenuBarWindow(ImGuiWindowAbstract):
 
                     if clicked:
                         menu_item.action()
+
+                imgui.end_menu()
 
 
 @dataclass
