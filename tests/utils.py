@@ -12,7 +12,7 @@ from pyimgui_utils import BasicWindow
 def setup_imgui_context() -> [GlfwRenderer, Any, Any]:
     """Setup imgui context
 
-    Strongly inspired form the tests in pyimgui repo.
+    Strongly inspired from the tests in pyimgui repo.
     Repo link: https://github.com/pyimgui/pyimgui/
     """
 
