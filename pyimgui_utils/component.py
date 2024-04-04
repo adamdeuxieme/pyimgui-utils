@@ -71,6 +71,9 @@ class Button(DrawableIT):
     def __init__(self,
                  label: str,
                  btn_callback: Callable[..., None],
+                 btn_color: Optional[Tuple[float, float, float]] = None,
+                 btn_color_hovered: Optional[Tuple[float, float, float]] = None,
+                 btn_color_active: Optional[Tuple[float, float, float]] = None,
                  hold_condition: Optional[Callable[..., bool]] = None,
                  hold_btn_color: Optional[Tuple[float, float, float]] = None,
                  hold_btn_color_hovered: Optional[Tuple[float, float, float]] = None,
@@ -94,7 +97,6 @@ class Button(DrawableIT):
         self._label = label
         self._btn_callback = btn_callback
         self._hold_condition = hold_condition
-
         self._hold_btn_color = [0.5, 0.5, 0.5] if hold_btn_color is None else hold_btn_color
 
         if hold_btn_color_hovered is None:
@@ -107,11 +109,28 @@ class Button(DrawableIT):
         else:
             self._hold_btn_color_active = hold_btn_color_active
 
+        self._btn_color = btn_color
+
+        if btn_color_hovered is None:
+            self._btn_color_hovered = self._btn_color
+        else:
+            self._btn_color_hovered = btn_color_hovered
+
+        if btn_color_active is None:
+            self._btn_color_active = self._btn_color
+        else:
+            self._btn_color_active = btn_color_active
+
         self._width = width
         self._height = height
 
     def draw(self, *args, **kwargs) -> None:
         """Draw button."""
+        btn_color_flag = self._btn_color is not None
+        if btn_color_flag:
+            imgui.push_style_color(imgui.COLOR_BUTTON, *self._btn_color, 1.0)
+            imgui.push_style_color(imgui.COLOR_BUTTON_HOVERED, *self._btn_color_hovered, 1.0)
+            imgui.push_style_color(imgui.COLOR_BUTTON_ACTIVE, *self._btn_color_active, 1.0)
 
         hold_flag = self._hold_condition(*args, **kwargs) if self._hold_condition is not None else False
 
@@ -127,6 +146,9 @@ class Button(DrawableIT):
 
         if hold_flag:
             imgui.pop_style_color(3)  # both neutral, hovered and active button color styles.
+        if btn_color_flag:
+            imgui.pop_style_color(3)  # both neutral, hovered and active button color styles.
+
 
 
 class NodeTree(DrawableIT):
