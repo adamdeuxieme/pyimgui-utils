@@ -23,15 +23,15 @@ class TestWindow(BasicWindow):
 
     def __init__(self,
                  expected_behavior: Union[List[str], str],
-                 window_name: Optional[str] = "Test Window"):
+                 name: Optional[str] = "Test Window"):
         """Build test context window
 
         :param expected_behavior: Description of expected behavior. The human
                                  operator will validate this behavior.
                                  It's either a list of lines or one line.
-        :param window_name: Name of the window to display.
+        :param name: Name of the window to display.
         """
-        super().__init__(window_name)
+        super().__init__(name)
         self.test_passes = None
         self.expected_behavior = expected_behavior
         self.test_passes_btn = Button(

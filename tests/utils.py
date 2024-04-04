@@ -58,7 +58,7 @@ class DummyWindow(BasicWindow):
 
     def __init__(self):
         super().__init__(
-            window_name=f"{id(self)}"
+            name=f"{id(self)}"
         )
 
     def draw_content(self, *args, **kwargs) -> None:
@@ -69,7 +69,7 @@ class FixedSizeWindow(BasicWindow):
 
     def __init__(self, x: float, y: float):
         super().__init__(
-            window_name=f"Fixed size window-{id(self)}",
+            name=f"Fixed size window-{id(self)}",
             imgui_window_flags=imgui.WINDOW_NO_RESIZE
         )
         self.before_begin_functions.append(

@@ -13,7 +13,7 @@ class Node:
 class TestNodeTreeWindow(BasicWindow):
 
     def __init__(self):
-        super().__init__(window_name="Node tree test window")
+        super().__init__(name="Node tree test window")
         self.node_root = Node(name="root")
         self.node_child1 = Node(name="child 1")
         self.node_child2 = Node(name="child 2")

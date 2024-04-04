@@ -19,7 +19,7 @@ class SquarePositionWindow(BasicWindow):
 
     def __init__(self):
         super().__init__(
-            window_name="Square Position"
+            name="Square Position"
         )
         self.drag_buttons = DragButtons(
             drag_min=-1,

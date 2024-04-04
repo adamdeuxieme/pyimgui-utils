@@ -11,7 +11,7 @@ from tests.test_config import INTERACTIVE_ENABLED
 class TestButtonWindow(BasicWindow):
 
     def __init__(self):
-        super().__init__(window_name="Test button window")
+        super().__init__(name="Test button window")
         self.counter = 0
         self.btn = Button(label="Increase",
                           btn_callback=self.increase_count)
@@ -29,7 +29,7 @@ class TestButtonSameNameWindow(BasicWindow):
 
     def __init__(self):
         super().__init__(
-            window_name="Test button same name window"
+            name="Test button same name window"
         )
         self.counter_1 = 0
         self.counter_2 = 0
@@ -62,7 +62,7 @@ class TestButtonSameNameWindow(BasicWindow):
 class TestDragButtonWindow(BasicWindow):
 
     def __init__(self):
-        super().__init__(window_name="Test drag button window")
+        super().__init__(name="Test drag button window")
         self.values = [0, 0, 0, 0, 0]
         self.format_table = ["x:%0.1f",
                              "y:%0.1f",
@@ -98,7 +98,7 @@ class TestDragButtonSameName(BasicWindow):
 
     def __init__(self):
         super().__init__(
-            window_name="TestDragButtonSameName"
+            name="TestDragButtonSameName"
         )
 
         self.drag_btns = DragButtons(

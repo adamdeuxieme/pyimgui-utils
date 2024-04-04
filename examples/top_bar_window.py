@@ -28,7 +28,7 @@ class DummyWindow(BasicWindow):
 
     def __init__(self):
         super().__init__(
-            window_name="Dummy window",
+            name="Dummy window",
             imgui_window_flags=imgui.WINDOW_NO_TITLE_BAR
         )
         self.size = (0.0, 0.0)
@@ -52,7 +52,7 @@ class TopBarWindow(BasicWindow):
         flags = (imgui.WINDOW_NO_TITLE_BAR
                  | imgui.WINDOW_NO_RESIZE
                  | imgui.WINDOW_NO_SCROLLBAR)
-        super().__init__(window_name="Top bar",
+        super().__init__(name="Top bar",
                          imgui_window_flags=flags)
 
         # Adjust style

@@ -117,25 +117,25 @@ class BasicWindow(ImGuiWindowAbstract):
     """
 
     def __init__(self,
-                 window_name: str,
+                 name: str,
                  closeable: Union[bool, None] = False,
                  imgui_window_flags: Union[int, None] = 0):
         """Basic window
          The most basic window opened with imgui.begin().
 
-        :param window_name: The title of window
+        :param name: The title of window
         :param closeable: True if the window is closeable, False otherwise
         :param imgui_window_flags: Optional imgui window flags
         """
         super().__init__()
 
-        self._window_name = window_name
-        self._closeable = closeable
-        self._imgui_window_flags = imgui_window_flags
+        self.name = name
+        self.closeable = closeable
+        self.imgui_window_flags = imgui_window_flags
 
     @override
     def _begin_statement_window(self):
-        return imgui.begin(self._window_name, self._closeable, self._imgui_window_flags)
+        return imgui.begin(self.name, self.closeable, self.imgui_window_flags)
 
     @abstractmethod
     def draw_content(self, *args, **kwargs):
