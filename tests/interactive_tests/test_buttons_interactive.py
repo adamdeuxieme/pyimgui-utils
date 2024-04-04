@@ -1,3 +1,5 @@
+from typing import Callable, List
+
 import imgui
 from typing_extensions import override
 
@@ -91,6 +93,43 @@ class TestDragButtonWindow(BasicWindow):
         )
 
 
+class TestDragButtonSameName(BasicWindow):
+    """Ensure drag buttons are reusable within the same window."""
+
+    def __init__(self):
+        super().__init__(
+            window_name="TestDragButtonSameName"
+        )
+
+        self.drag_btns = DragButtons(
+            drag_min=-10.0,
+            drag_max=10.0,
+            drag_speed=0.1
+        )
+
+        self.position = [0.0, 0.0]
+        self.acceleration = [0.0, 0.0]
+        self.setters_pos = [self.setters_factory(self.position, i)
+                            for i in range(2)]
+        self.setters_ac = [self.setters_factory(self.acceleration, i)
+                           for i in range(2)]
+
+    def draw_content(self, *args, **kwargs) -> None:
+        imgui.text(f"{self.position = }")
+        self.drag_btns.draw(self.position, self.setters_pos)
+        imgui.new_line()
+        imgui.text(f"{self.acceleration = }")
+        self.drag_btns.draw(self.acceleration, self.setters_ac)
+
+    @staticmethod
+    def setters_factory(values: List[float],
+                        index: int) -> Callable[[float], None]:
+        def setter(value: float) -> None:
+            values[index] = value
+
+        return setter
+
+
 class TestButtonsInteractive:
 
     def test_button(self):
@@ -99,7 +138,8 @@ class TestButtonsInteractive:
             run_test_window(
                 window_under_test=wd_ut,
                 expected_behavior=["You should see a button. On press ",
-                                   "the number of clicked count should increases."]
+                                   "the number of clicked count "
+                                   "should increases."]
             )
 
     def test_button_same_name(self):
@@ -120,9 +160,25 @@ class TestButtonsInteractive:
             wd_ut = TestDragButtonWindow()
             run_test_window(
                 window_under_test=wd_ut,
-                expected_behavior=["You should see drag buttons. On dragging the ",
-                                   "corresponding value should change. format table ",
-                                   "must be like this 'x:0.0'. Min value must be ",
-                                   "-5.0 and max value must be 5.0. Drag speed must ",
-                                   "be 0.05 and width 50.0"]
+                expected_behavior=["You should see drag buttons. On dragging "
+                                   "the corresponding value should change. ",
+                                   "format table must be like this 'x:0.0'. "
+                                   "Min value must be -5.0 and max value must ",
+                                   "be 5.0. Drag speed must be 0.05 and width "
+                                   "50.0"]
+            )
+
+    def test_drag_buttons_with_same_name(self):
+        if INTERACTIVE_ENABLED:
+            wd_ut = TestDragButtonSameName()
+            run_test_window(
+                window_under_test=wd_ut,
+                expected_behavior=["Observe a window with position and "
+                                   "acceleration values and two set of two ",
+                                   "drag buttons. You should be able to change "
+                                   "position and acceleration values with the ",
+                                   "drag buttons. This test demonstrate the "
+                                   "ability to reuse a DragButton instance ",
+                                   "for multiple values and setters within the "
+                                   "same window. "]
             )

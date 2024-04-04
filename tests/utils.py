@@ -16,7 +16,7 @@ def setup_imgui_context() -> [GlfwRenderer, Any, Any]:
     Repo link: https://github.com/pyimgui/pyimgui/
     """
 
-    width, height = 600, 300
+    width, height = 800, 400
     window_name = "TestImGuiWindowAbstract"
 
     if not glfw.init():
