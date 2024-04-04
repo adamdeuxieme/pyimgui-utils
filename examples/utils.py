@@ -4,7 +4,6 @@ import OpenGL.GL as gl
 import imgui
 import numpy as np
 import pygame
-from glfw.GLFW import glfwTerminate
 from imgui.integrations.glfw import GlfwRenderer
 from imgui.integrations.pygame import PygameRenderer
 
