@@ -10,6 +10,11 @@ from imgui.integrations.pygame import PygameRenderer
 
 
 def setup_imgui_context() -> [GlfwRenderer, Any, Any]:
+    """Set up an imgui context with pygame.
+
+    Strongly inspired from pygame integration example of pyimgui repo.
+    https://github.com/pyimgui/pyimgui/blob/master/doc/examples/integrations_pygame.py
+    """
     pygame.init()
     size = 800, 600
 
@@ -24,13 +29,15 @@ def setup_imgui_context() -> [GlfwRenderer, Any, Any]:
     return impl
 
 
-def terminate_imgui_context(impl, ctx) -> None:
-    impl.shutdown()
-    glfwTerminate()
-    imgui.destroy_context(ctx)
-
-
 def draw_square(position, color: Tuple[int, int, int] = None):
+    """Draw a square on the screen
+
+    Note that a position of [0.0, 0.0] refers to the center of the screen,
+    a position of [1.0, 1.0] refers to the top right corner of the screen etc.
+
+    :param position: A position Tuple.
+    :param color: A Tuple of three int representing RGB values between 0 and 255
+    """
     square = np.array([[-0.2, -0.2],
                        [0.2, -0.2],
                        [0.2, 0.2],
@@ -45,4 +52,4 @@ def draw_square(position, color: Tuple[int, int, int] = None):
     gl.glVertex2f(*square_position[1])  # Bottom Right
     gl.glVertex2f(*square_position[2])  # Top Right
     gl.glVertex2f(*square_position[3])  # Top Left
-    gl.glEnd()  # We are done drawing the polygon
+    gl.glEnd()

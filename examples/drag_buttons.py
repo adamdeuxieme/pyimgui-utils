@@ -10,6 +10,12 @@ from pyimgui_utils import BasicWindow, DragButtons
 
 
 class SquarePositionWindow(BasicWindow):
+    """A Window to alter square positions.
+
+    Contain 3 set of drag buttons, on set for each square on the screen.
+    The same DragButtons instance is reuse for each square. It allows to reuse
+    parameters as  drag_min, drag_max and drag_speed.
+    """
 
     def __init__(self):
         super().__init__(
@@ -23,10 +29,18 @@ class SquarePositionWindow(BasicWindow):
 
     @override
     def draw_content(self,
-                     pos_callback: List[Tuple[List[float], List[Callable[[float], None]]]],
+                     pos_setters: List[Tuple[List[float], List[Callable[[float], None]]]],
                      format_table: List[str]) -> None:
-        imgui.text("Alter square position in this window.")
-        for el in pos_callback:
+        """Draw the main content of the SquarePositionWindow instance
+
+        :param pos_setters: List of two-elements tuples. The first element is
+        position values and the second element is a list of setters, one setter
+        for each value in position list.
+        :param format_table: A list of strings used to set the formatting of
+        the drag buttons.
+        """
+        imgui.text("Alter squares position in this window.")
+        for el in pos_setters:
             position = el[0]
             setters = el[1]
             self.drag_buttons.draw(values=position,
@@ -44,15 +58,16 @@ def main():
 
     # Create a setter factory.
     # Bind each values of position attribute with a setter.
-    def set_factory(index: int, position):
-        def set_position(x: float):
+    def setter_factory(position: List[float],
+                       index: int) -> Callable[[float], None]:
+        def setter(x: float):
             position[index] = x
-        return set_position
+        return setter
 
     # Use the setters factory to create a list of setters.
-    setters_square_1 = [set_factory(i, square_position_1) for i in range(2)]
-    setters_square_2 = [set_factory(i, square_position_2) for i in range(2)]
-    setters_square_3 = [set_factory(i, square_position_3) for i in range(2)]
+    setters_square_1 = [setter_factory(square_position_1, i) for i in range(2)]
+    setters_square_2 = [setter_factory(square_position_2, i) for i in range(2)]
+    setters_square_3 = [setter_factory(square_position_3, i) for i in range(2)]
 
     # Create a format table
     format_table = ["x:%f", "y:%f"]
@@ -72,7 +87,7 @@ def main():
 
         # Draw the window with position and setters as parameters
         square_position_window.draw(
-            pos_callback=[
+            pos_setters=[
                 (square_position_1, setters_square_1),
                 (square_position_2, setters_square_2),
                 (square_position_3, setters_square_3),
