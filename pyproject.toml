@@ -1,30 +1,27 @@
 [build-system]
-requires = [
-    "hatchling",
-    "imgui",
-    "typing_extensions",
-    "glfw",
-    "PyOpenGL",
-    "pygame"
-]
+requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
 name = "pyimgui_utils"
-version = "0.0.1"
+version = "0.0.2-alpha4"
 authors = [
   { name="Adam SOIMANSOIB", email="adamsoimansoibpro@gmail.com" },
 ]
 description = "Provide utils to help you create imgui windows and elements using pyimgui."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.7"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)",
     "Operating System :: OS Independent",
     "Natural Language :: English",
 ]
+dependencies = [
+    "imgui>=2.0.0",
+    "typing-extensions",
+]
 
 [project.urls]
 Homepage = "https://github.com/adamdeuxieme/pyimgui-utils"
-Issues = "https://github.com/pypa/sampleproject/issues"
+Issues = "https://github.com/adamdeuxieme/pyimgui-utils/issues"
