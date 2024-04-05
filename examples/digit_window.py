@@ -70,7 +70,7 @@ class DigitWindow(BasicWindow):
         self.typed_input = ""
 
     def draw_content(self, *args, **kwargs) -> None:
-        imgui.text(f"{self.typed_input = }")
+        imgui.text(f"self.typed_input = {self.typed_input}")
         for ln in self.lines:
             list(map(lambda e: {e.draw(), imgui.same_line()}, ln))
             imgui.new_line()

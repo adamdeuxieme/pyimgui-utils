@@ -22,7 +22,7 @@ class TestButtonWindow(BasicWindow):
     @override
     def draw_content(self) -> None:
         self.btn.draw()
-        imgui.text(f"{self.counter = }")
+        imgui.text(f"self.counter = {self.counter}")
 
 
 class TestButtonSameNameWindow(BasicWindow):
@@ -52,8 +52,8 @@ class TestButtonSameNameWindow(BasicWindow):
 
     @override
     def draw_content(self, *args, **kwargs) -> None:
-        imgui.text(f"{self.counter_1 = }")
-        imgui.text(f"{self.counter_2 = }")
+        imgui.text(f"self.counter_1 = {self.counter_1}")
+        imgui.text(f"self.counter_2 = {self.counter_2}")
         self.btn_1.draw()
         imgui.same_line()
         self.btn_2.draw()
@@ -115,10 +115,10 @@ class TestDragButtonSameName(BasicWindow):
                            for i in range(2)]
 
     def draw_content(self, *args, **kwargs) -> None:
-        imgui.text(f"{self.position = }")
+        imgui.text(f"self.position = {self.position}")
         self.drag_btns.draw(self.position, self.setters_pos)
         imgui.new_line()
-        imgui.text(f"{self.acceleration = }")
+        imgui.text(f"self.acceleration = {self.acceleration}")
         self.drag_btns.draw(self.acceleration, self.setters_ac)
 
     @staticmethod

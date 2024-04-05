@@ -29,9 +29,9 @@ class DragButtons(DrawableIT):
         self._title = None if title is not None and title == "" else title
 
     def draw(self,
-             values: Union[list[float], list[int]],
+             values: Union[List[float], List[int]],
              setters: List[Callable[[Union[float, int]], None]],
-             format_table: Optional[list[str]] = None):
+             format_table: Optional[List[str]] = None):
         btn_nb = len(setters)
         for i in range(btn_nb):
             btn_id = f"{id(self)}{i}{id(values)}{id(setters)}{id(format_table)}"
@@ -148,7 +148,6 @@ class Button(DrawableIT):
             imgui.pop_style_color(3)  # both neutral, hovered and active button color styles.
         if btn_color_flag:
             imgui.pop_style_color(3)  # both neutral, hovered and active button color styles.
-
 
 
 class NodeTree(DrawableIT):

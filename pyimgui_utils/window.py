@@ -1,5 +1,5 @@
 import logging
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from dataclasses import dataclass, field
 from typing import Union, Callable, List
 
@@ -152,7 +152,7 @@ def _undefined_action():
 
 @dataclass
 class MenuItem:
-    name: Union[str, list[str]]  # It can be a list of names to dynamically change them.
+    name: Union[str, List[str]]  # It can be a list of names to dynamically change them.
     action: Callable[[], None] = _undefined_action
     selected_name: int = 0
     shortcut: str = ""
@@ -163,13 +163,13 @@ class MenuItem:
 @dataclass
 class MenuBar:
     name: str
-    menu_items: list[MenuItem] = field(default_factory=list)
+    menu_items: List[MenuItem] = field(default_factory=list)
     enabled: bool = True
 
 
 class MenuBarWindow(ImGuiWindowAbstract):
 
-    def __init__(self, menu_bars: Union[list[MenuBar], None] = None):
+    def __init__(self, menu_bars: Union[List[MenuBar], None] = None):
         super().__init__()
 
         if menu_bars is None:
