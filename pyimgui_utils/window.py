@@ -15,13 +15,6 @@ class ImGuiWindowAbstract(DrawableIT):
     Provide a flexible list of function to be executed around begin
     and end statement.
     """
-    __FOCUS_ID_VALUE_ERROR_MSG = "focus_id is not in _focus_state dict!"
-
-    # Focus state of every class children.
-    # Never mutate this attribute with self reference!
-    # Always use class reference. Otherwise, an instance attribute
-    # while shadow the class attribute.
-    window_focus_state = {}  # todo: switch for a dataclass object
 
     def __init__(self):
         self.__log = logging.getLogger(self.__class__.__name__)
@@ -33,15 +26,6 @@ class ImGuiWindowAbstract(DrawableIT):
         self.after_end_functions = []
         self.after_begin_functions = []
         self.before_end_functions = []
-
-        self.focus_id = f"focus-id-{id(self)}"  # Create a unique focus id
-        ImGuiWindowAbstract._init_window_focus_state(self)
-
-        self.__log.debug(f"Initialize focus window {self.focus_id}.")
-
-    @classmethod
-    def _init_window_focus_state(cls, window):
-        cls.window_focus_state[window.focus_id] = False  # Not focused by default
 
     def draw(self, *args, **kwargs) -> None:
         """Draw ImGui window and execute declared function around
@@ -62,40 +46,6 @@ class ImGuiWindowAbstract(DrawableIT):
 
         for func in self.after_end_functions:
             func()
-
-    def focus(self):
-        """Mark the main window as focused."""
-        if self.focus_id not in self.window_focus_state.keys():
-            raise ValueError(self.__FOCUS_ID_VALUE_ERROR_MSG)
-
-        # Remove previous focused element
-        for focus_element, focus_flag in self.window_focus_state.items():
-            if focus_flag:
-                self.window_focus_state[focus_element] = False
-                self.__log.debug(f"Unfocus window {focus_element}")
-                break
-
-        ImGuiWindowAbstract.window_focus_state[self.focus_id] = True  # Focus current element
-
-        self.__log.debug(f"Focus window: {self.focus_id}")
-
-    def unfocus(self):
-        """Unmark this window as focused."""
-        if self.focus_id not in self.window_focus_state.keys():
-            raise ValueError(self.__FOCUS_ID_VALUE_ERROR_MSG)
-
-        ImGuiWindowAbstract.window_focus_state[self.focus_id] = False  # Remove the focus element
-
-        self.__log.debug(f"Unfocus window {self.focus_id}")
-
-    def is_focused(self):
-        """Return whether the element is focused or not.
-        :return: Return True if the window is focused.
-        """
-        if self.focus_id not in self.window_focus_state.keys():
-            raise ValueError(self.__FOCUS_ID_VALUE_ERROR_MSG)
-
-        return self.window_focus_state[self.focus_id]
 
     @abstractmethod
     def _begin_statement_window(self):
