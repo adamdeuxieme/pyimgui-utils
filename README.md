@@ -3,7 +3,7 @@ Provide utils to help you create imgui windows and elements using pyimgui.
 It provides custom buttons, drag buttons, tree node and so on.
 
 ## Installation
-Python 3.9+ is required for the project to work. 
+Python 3.7+ is required for the project to work. 
 
 You can use `pip` to install the module with this command. 
 
